@@ -1,0 +1,211 @@
+@import 'tailwindcss';
+
+/*
+ * Tokens de diseño TATTO ART.
+ * Negro tinta, hueso y un solo rojo de acento. Tipografías: Anton (titulares),
+ * Pirata One (gótica / firma) e Inter (texto). Fuente: diseño `Main.dc.html`.
+ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Anton', 'Impact', sans-serif;
+  --font-gothic: 'Pirata One', 'Georgia', serif;
+
+  /* Base */
+  --color-ink: #0a0a0a;
+  --color-bone: #f4f1ec;
+  --color-paper: #f1ede6;
+
+  /* Acento */
+  --color-accent: #d0021b;
+  /* Rojo claro para texto pequeño sobre negro (contraste AA). */
+  --color-accent-soft: #ff5a5a;
+  /* Rojo oscuro para texto sobre hueso. */
+  --color-accent-deep: #a3000f;
+
+  /* Texto atenuado sobre negro */
+  --color-smoke: #bdb8b0;
+  --color-ash: #9a958d;
+  --color-dust: #8a857e;
+  --color-dim: #77726b;
+
+  /* Texto atenuado sobre hueso */
+  --color-graphite: #3a3835;
+  --color-stone: #55524d;
+
+  /* Líneas y superficies sobre negro */
+  --color-line: #222222;
+  --color-line-strong: #2a2a2a;
+  --color-rule: #333333;
+  --color-edge: #3a3a3a;
+  --color-outline: #444444;
+  --color-raised: #1e1e1e;
+  --color-ghost: #262626;
+  --color-blood: #2e0a0e;
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-marquee-reverse: marquee 38s linear infinite reverse;
+  --animate-spin-slow: spin 90s linear infinite;
+  --animate-fade-in: fade-in 0.25s ease both;
+  --animate-pop-in: pop-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent-soft);
+    outline-offset: 3px;
+  }
+}
+
+/*
+ * Animaciones ligadas al scroll (`animation-timeline: view()`).
+ * Sin soporte o con movimiento reducido, el contenido se muestra estático.
+ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes drift {
+  from {
+    transform: translateY(60px);
+  }
+  to {
+    transform: translateY(-60px);
+  }
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@layer components {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* Aparece subiendo al entrar al viewport. */
+      .reveal {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 26%;
+      }
+      /* Paralaje suave mientras cruza el viewport. */
+      .parallax {
+        animation: drift linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 100%;
+      }
+      /* Línea que se dibuja de izquierda a derecha. */
+      .grow-line {
+        transform-origin: left;
+        animation: grow linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+    }
+  }
+
+  /* Texto con contorno (marquesina "TATTO ART"). */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-bone);
+  }
+
+  /* Wordmark grabado del footer: líneas horizontales recortadas por el texto. */
+  .text-engraved {
+    background: repeating-linear-gradient(0deg, var(--color-bone) 0 2px, transparent 2px 6px);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Emblema del hero */
+  .emblem-rays {
+    background: repeating-conic-gradient(
+      from 0deg,
+      var(--color-bone) 0deg 0.6deg,
+      transparent 0.6deg 4deg
+    );
+  }
+  .emblem-rings {
+    background: repeating-radial-gradient(circle, #0a0a0a 0 6px, #2a2a2a 6px 7px);
+  }
+  .emblem-core {
+    background: repeating-linear-gradient(135deg, #1a1a1a 0 2px, #101010 2px 9px);
+  }
+
+  /* Patrones de marcador de imagen (se reemplazan por fotos reales por elemento). */
+  .art-lines {
+    background: repeating-linear-gradient(135deg, #171717 0 2px, #0e0e0e 2px 9px);
+  }
+  .art-rings {
+    background: repeating-radial-gradient(circle at 35% 40%, #1b1b1b 0 2px, #0d0d0d 2px 11px);
+  }
+  .art-red {
+    background: repeating-linear-gradient(45deg, #2b0609 0 2px, #140708 2px 10px);
+  }
+  .art-rays {
+    background: repeating-conic-gradient(
+      from 0deg at 50% 70%,
+      #171717 0deg 3deg,
+      #0c0c0c 3deg 7deg
+    );
+  }
+  .art-grid {
+    background:
+      repeating-linear-gradient(0deg, #161616 0 1px, transparent 1px 14px),
+      repeating-linear-gradient(90deg, #161616 0 1px, #0d0d0d 1px 14px);
+  }
+}
